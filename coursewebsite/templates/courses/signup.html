@@ -1,0 +1,19 @@
+{% extends 'courses/base.html' %}
+{% load static %}
+{% load customfilter %}
+
+{% block headblock %}
+      <title>Signuppage</title>
+      <link rel="stylesheet" href="{% static 'courses/css/signup.css' %}" type="text/css">
+{% endblock headblock %}
+
+{% block bodyblock %}
+
+<div>
+      <form action="" method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <input type="submit" name="Signup" id="">
+      </form>
+</div>
+{% endblock bodyblock %}

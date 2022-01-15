@@ -1,0 +1,55 @@
+{% extends 'courses/base.html' %}
+{% load static %}
+{% load customfilter %}
+
+{% block headblock %}
+      <title>Homepage</title>
+      <link rel="stylesheet" href="{% static 'courses/css/homepage.css' %}" type="text/css">
+{% endblock headblock %}
+
+{% block bodyblock %}
+<div class="container-fluid">
+      <br>
+      <div class="row">
+            {% for c in courses %}
+            <div class="col mx-auto">
+                  <div class="card mx-auto" style="width: 18rem;">
+                        <img src="{{ c.thumbnail.url }}" class="card-img-top" alt="..." height="200" width="100">
+                        <div class="card-body">
+                              <h5 class="card-title">{{ c.name }}</h5>
+                              <p class="card-text">
+                                    {{ c.description }} <br>
+                                    <span class="price">
+                                          <small>Save {{ c.discount }}%</small> <br>
+                                          <del> {{ c.price|rupee }}</del>
+                                          &nbsp; 
+                                          <span> {% cal_sellprice c.price c.discount as value %} {{ value|rupee }}</span>
+                                    </span>                                 
+                              </p>
+                              
+                        </div>
+                        <div class='card-footer'>
+                              {% is_enrolled request course  as enrolled %}
+                              <div class="row">
+                                    {% if enrolled %}
+                                    <div class="col-md ">
+                                          <a href="/course/{{ course.slug}}" class="btn btn-primary d-md-flex justify-content-md-center">Start course </a>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-md-6 ">
+                                          <a href="/check-out/{{ c.slug }}/" class="btn btn-primary ">Enroll now </a>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                          <a href="/course/{{ c.slug }}/" class="btn btn-primary ">Show more</a>
+                                    </div>
+                                    {% endif %}
+                              </div>
+                        </div>
+                  </div>
+            </div>
+            {% endfor %}
+      </div>
+</div>
+{% endblock bodyblock %}
+
+  

@@ -1,0 +1,81 @@
+{% extends 'courses/base.html' %}
+{% load static %}
+{% load customfilter %}
+
+{% block headblock %}
+      <title>checkoutpage</title>
+      <link rel="stylesheet" href="{% static 'courses/css/checkout.css' %}" type="text/css">
+{% endblock headblock %}
+
+{% block bodyblock %}
+
+<div class="container">
+      <br>
+      <div class="row">
+            <div class=" col-sm mx-auto">
+                  <div class="card mx-auto" style="width: 18rem;">
+                        <img src="{{ course.thumbnail.url }}" class="card-img-top" alt="..." height="200" width="100">
+                        <div class="card-body">
+                              <h5 class="card-title">{{ c.name }}</h5>
+                              <p class="card-text">
+                                    {{ c.description }} <br>
+                                    <span class="price">
+                                          <small>Save {{ course.discount }}%</small> <br>
+                                          <del> {{ course.price|rupee }}</del>
+                                          &nbsp; 
+                                          <span> {% cal_sellprice course.price course.discount as value %} {{ value|rupee }}</span>
+                                    </span>                                 
+                              </p>
+                              
+                        </div>
+                  </div>
+            </div>
+            <div class="col-sm">
+                  <h2>{{ course.name }}</h2>
+                  <h3>Payable Amount: {% cal_sellprice course.price course.discount as value %} {{ value|rupee }}</h3>
+                  <a class="btn btn-light border" href="?action=create_payment">Continue to payment </a>
+            </div>
+      </div>
+</div>
+
+
+
+{% if order is not None %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+      var options = {
+    "key": "rzp_test_bzejCKEhBlnERM", // Enter the Key ID generated from the Dashboard
+    "name": " Online Course Website ",
+    "description": "Payment for {{ course.name }}",
+    "image": "https://example.com/your_logo",
+    "order_id": "{{ order.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "callback_url": "http://127.0.0.1:8000/varify_payment/",
+    "prefill": {
+        "name": "{{ user.first_name }}",
+        "email": "{{ user.email }}",
+    },
+
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+
+rzp1.open();
+
+</script>
+
+{% endif %}
+
+{% if error is not None %}
+
+<script>
+      window.onload = ()=>{
+            alert("{{error}}")
+      }
+</script>
+  
+{% endif %}
+
+{% endblock bodyblock %}
